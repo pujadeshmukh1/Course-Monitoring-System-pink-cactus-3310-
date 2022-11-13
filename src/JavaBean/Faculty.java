@@ -50,6 +50,13 @@ public class Faculty {
 
 
 
+	public Faculty(int i, String n, String a, String m, String u, String p) {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+
 	public int getFacultyId() {
 		return facultyId;
 	}
@@ -161,6 +168,14 @@ public class Faculty {
 	public static int size() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+
+
+
+	public void add(Faculty facul) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

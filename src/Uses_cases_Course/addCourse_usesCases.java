@@ -4,8 +4,7 @@ import java.util.Scanner;
 
 import Dao.CourseDao;
 import Dao.CourseDaoImpl;
-import Dao.FacultyDao;
-import Dao.FacultyDaoImpl;
+
 import Exceptions.CourseException;
 import Exceptions.InputException;
 import JavaBean.Course;
@@ -43,14 +42,14 @@ public static void main(String[] args) throws InputException{
 			String res;
 			try {
 				res = dao.addCourse(course);
-				System.out.println();
+				
 				System.out.println(res);
-				System.out.println();
+				
 				
 			} catch (CourseException ce) {
-				System.out.println();
+			
 				System.out.println(ConsoleColors.RED_BACKGROUND+ce.getMessage()+ConsoleColors.RESET);
-				System.out.println();
+				
 			}
 			
 		}catch(Exception e) {

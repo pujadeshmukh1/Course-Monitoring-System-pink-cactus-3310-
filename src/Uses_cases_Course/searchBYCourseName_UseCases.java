@@ -1,11 +1,10 @@
 package Uses_cases_Course;
 
+
 import java.util.List;
 import java.util.Scanner;
-
 import Dao.CourseDao;
 import Dao.CourseDaoImpl;
-
 import JavaBean.Course;
 
 public class searchBYCourseName_UseCases {

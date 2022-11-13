@@ -1,5 +1,6 @@
 package Dao;
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,15 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Dao.custom.AutoPassGen;
+import Exceptions.AdminException;
 import Exceptions.CourseException;
 import Exceptions.FacultyException;
 import JavaBean.Faculty;
-import JavaBean.Course;
 import Utility.DBconn;
 import custom.ConsoleColors;
 
 public class FacultyDaoImpl implements FacultyDao{
 
+	
+	
 	@Override
 	public String addFaculty(Faculty faculty) throws FacultyException {
 		String message = "Data Not Inserted...";
@@ -128,7 +131,7 @@ public class FacultyDaoImpl implements FacultyDao{
 	@Override
 	public Faculty searchFacultyById(int facultyId) throws FacultyException {
 		
-Faculty faculty = null;
+        Faculty faculty = null;
 		
 		try(Connection conn = DBconn.provideConnection()){
 			
@@ -247,25 +250,55 @@ Faculty faculty = null;
 		}
 		
 		return faculty;
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	}
-
-	
-	
-	
+			
 	}
 
 
+
+	// Delete details of faculty table
+		@Override
+		public String deleteFaculty(int facultyId) throws FacultyException {
+			
+			String message = ConsoleColors.RED+"Faculty Data Not Updated..."+ConsoleColors.RESET;
+			
+			try(Connection conn = DBconn.provideConnection()){
+				
+				
+				PreparedStatement ps = conn .prepareStatement("delete from faculty where facultyId = ?");
+				
+				ps.setInt(1, facultyId);
+				
+				int x = ps.executeUpdate();
+				
+				if(x>0) {		
+					message = ConsoleColors.GREEN+"Faculty Deleted Successfully.."+ConsoleColors.RESET;
+					
+				}else {
+					throw new FacultyException(ConsoleColors.RED+"Faculty Not Exist"+ConsoleColors.RESET);
+					
+				}
+				
+			} catch (SQLException e) {
+
+				throw new FacultyException(ConsoleColors.RED+"Wrong Data Format"+ConsoleColors.RESET);
+			}
+			
+			return message;
+		}
+
+
+
+
+		@Override
+		public Faculty loginFaculty(String username, String password) throws FacultyException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+
+
+		
+
+
+	}

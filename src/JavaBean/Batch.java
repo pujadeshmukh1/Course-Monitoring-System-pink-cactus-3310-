@@ -24,13 +24,16 @@ public Batch(int batchId, int courseId, int facultyId, int numberofStudents, Str
 	this.duration = duration;
 }
 
-public Batch(int courseId2, int facultyId2, int numberofStudents2, String batchstartDate2, String duration2) {
+
+public Batch(String bid, int cid, int fid, String fName, int nos, String sDate, String dur) {
 	// TODO Auto-generated constructor stub
 }
 
-public Batch(int cId, int noStud, String date, String bDur) {
+
+public Batch(String bid, int cid, int fid, int nos, String sDate, String dur) {
 	// TODO Auto-generated constructor stub
 }
+
 
 public int getBatchId() {
 	return batchId;

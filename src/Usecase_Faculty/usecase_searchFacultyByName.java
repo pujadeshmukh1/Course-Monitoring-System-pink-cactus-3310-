@@ -1,4 +1,5 @@
 package Usecase_Faculty;
+
 import java.util.List;
 import java.util.Scanner;
 import Dao.FacultyDao;

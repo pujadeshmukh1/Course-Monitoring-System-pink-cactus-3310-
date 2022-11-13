@@ -1,5 +1,8 @@
 package Batch;
 
+
+
+
 import java.util.Scanner;
 
 import Dao.BatchDao;
@@ -42,16 +45,13 @@ public class BatchDaoUSeCases {
 	
 		try {
 			String str = dao1.addBatch(batch);
-			System.out.println();
+		
 			System.out.println(str);
-			System.out.println();
+			
 			
 		} catch (BatchException e) {
 
-			System.out.println();
 			System.out.println(ConsoleColors.RED_BACKGROUND+e.getMessage()+ConsoleColors.RESET);
-			System.out.println();
-		
 		
 	}catch(Exception e) {
 		throw new InputException(ConsoleColors.RED+"Please Enter Right Input"+ConsoleColors.RESET);
