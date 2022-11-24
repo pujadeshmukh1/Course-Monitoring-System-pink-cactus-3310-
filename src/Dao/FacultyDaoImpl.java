@@ -1,304 +1,345 @@
 package Dao;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-import Dao.custom.AutoPassGen;
-import Exceptions.AdminException;
-import Exceptions.CourseException;
 import Exceptions.FacultyException;
-import JavaBean.Faculty;
-import Utility.DBconn;
-import custom.ConsoleColors;
+import Extra.ConsoleColors;
+import Model_JavaBeen.Faculty;
+import Utility.DBUtil;
 
 public class FacultyDaoImpl implements FacultyDao{
 
-	
-	
 	@Override
-	public String addFaculty(Faculty faculty) throws FacultyException {
-		String message = "Data Not Inserted...";
+	public String addFaculty() throws FacultyException {
+		String message=ConsoleColors.RED+"Faculty not added"+ConsoleColors.RESET;
 		
-		try(Connection conn = DBconn.provideConnection()){
+		@SuppressWarnings("resource")
+		Scanner sc=new Scanner(System.in);
+		System.out.println("enter facultyId ");
+		int facultyId =sc.nextInt();
+		System.out.println("enter facultyname ");
+		String facultyname =sc.next();
+		System.out.println("enter facultyaddress ");
+		String facultyaddress =sc.next();
+		System.out.println("enter mobile ");
+		String mobile =sc.next();
+		System.out.println("enter email ");
+		String email =sc.next();
+		System.out.println("enter username ");
+		String username =sc.next();
+		System.out.println("enter password ");
+		String password  =sc.next();
+		
+		try (Connection conn = DBUtil.provideConnection()){
 			
-			Statement statement = conn.createStatement();
+			PreparedStatement ps = conn.prepareStatement("insert into faculty(facultyId,facultyname,facultyaddress,mobile,email,username,password) values(?,?,?,?,?,?,?)");
 			
-            String sql = "SELECT MAX( facultyId ) FROM faculty";
-            
-            ResultSet result = statement.executeQuery(sql);
-            
-            Integer id = 0;
-            
-            if(result.next()) {
-            	id = result.getInt("max( facultyId )");
-            }
-            
-            id = id + 1;
-            String text = String.format("%03d", id);
-			String fname = faculty.getFacultyName().toLowerCase();
-			String username = fname + text;
-			String password = AutoPassGen.genPass(8);
+			ps.setInt(1,facultyId);
+			ps.setString(2,facultyname);
+			ps.setString(3,facultyaddress);
+			ps.setString(4,mobile);
+			ps.setString(5,email);
+			ps.setString(6,username);
+			ps.setString(7,password);
 			
-			PreparedStatement ps1 = conn .prepareStatement("insert into Faculty(facultyId, facultyName, facultyAddress,  mobile, email ,username, password) values(?,?,?,?,?,?,?)");
+			int rs=ps.executeUpdate();
 			
-			ps1.setInt(1, faculty.getFacultyId());
-			ps1.setString(2, faculty.getFacultyName());
-			
-			ps1.setString(3, faculty.getFacultyAddress());
-			
-			ps1.setString(4, faculty.getMobile());
-			ps1.setString(5, faculty.getEmail());
-			ps1.setString(6, username);
-			ps1.setString(7, password);
-			int x = ps1.executeUpdate();
-			
-			if(x>0) {		
-				message = "Faculty Added Successfully..";	
+			if(rs>0) {
+				message=ConsoleColors.GREEN+"Faculty added"+ConsoleColors.RESET;
+				
 			}
 			
-		}catch(SQLException e) {
 			
-			message = e.getMessage();
 			
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return message;
 	}
 
-	
-	
-	
 	@Override
-	public List<Faculty> searchFacultyByName(String fname) throws FacultyException{
+	public List<Faculty> getAllFacultyDetails() throws FacultyException {
 		
-		List<Faculty> facultys = new ArrayList<>();
+		List<Faculty> fact = new ArrayList<>();
 		
-		try (Connection conn = DBconn.provideConnection()){
+		try (Connection conn = DBUtil.provideConnection()){
 			
-			PreparedStatement ps3= conn.prepareStatement("Select * from Faculty where facultyName = ?");
+			PreparedStatement ps = conn.prepareStatement("Select * from faculty");
 			
-			ps3.setString(1, fname);
-			
-			ResultSet rs = ps3.executeQuery();
+			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) {
 				
-              int facultyId = rs.getInt("facultyId");
-				
-				String facultyname = rs.getString("facultyname");
-				
-				String facultyAddress = rs.getString("facultyAddress");
-				
+				int id = rs.getInt("facultyId");
+				String name = rs.getString("facultyName");
+				String address = rs.getString("facultyAddress");
 				String mobile = rs.getString("mobile");
-				
 				String email = rs.getString("email");
-				
 				String username = rs.getString("username");
+				String password = "********";
 				
-				String password = rs.getString("password");
-
-				Faculty faculty = new Faculty(facultyId, facultyname, facultyAddress, mobile, email, username, password);
+				Faculty f=new Faculty(id, name, address, mobile, email, username, password);
 				
-				facultys.add(faculty);
+				fact.add(f);
 				
-			}
-			if(facultys.size()==0) {
-				throw new FacultyException("Faculty does not exist by name");
 			}
 			
 			
-			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new FacultyException(e.getMessage());
-			// TODO: handle exception
 		}
-		return facultys;
 		
-		
-		
-		
+		return fact;
 	}
 
-
-
 	@Override
-	public Faculty searchFacultyById(int facultyId) throws FacultyException {
+	public Faculty searchFacultyById() throws FacultyException {
 		
-        Faculty faculty = null;
+		@SuppressWarnings("resource")
+		Scanner sc = new Scanner(System.in);
 		
-		try(Connection conn = DBconn.provideConnection()){
+		System.out.println("Enter facultyId :-");
+		int facultyId=sc.nextInt();
+		
+		Faculty faculty = null;
+		
+		try (Connection conn = DBUtil.provideConnection()){
 			
-			
-			PreparedStatement ps = conn .prepareStatement("Select * from Faculty where facultyId = ?");
+			PreparedStatement ps = conn.prepareStatement("selet * from faculty where  facultyId= ? ");
 			
 			ps.setInt(1, facultyId);
 			
 			ResultSet rs = ps.executeQuery();
 			
-		
-			if(rs.next()) {		
-				int fid = rs.getInt("facultyId");
+			if(rs.next()) {
 				
-				String fname = rs.getString("facultyname");
+				int i = rs.getInt("facultyId");
+				String n = rs.getString("facultyName");
+				String a = rs.getString("facultyAddress");
+				String m = rs.getString("mobile");
+				String e= rs.getString("email");
+				String u = rs.getString("username");
+				String p = "********";
 				
-				String address = rs.getString("facultyAddress");
-				
-				String mobile = rs.getString("mobile");
-				
-				String email = rs.getString("email");
-				
-				String username = rs.getString("username");
-				
-				String password = rs.getString("password");
-
-				faculty = new Faculty(fid,fname,address,mobile,email,username, username);
-				
-			}else
+				faculty.setFacultyid(i);
+				faculty.setFacultyname(n);
+				faculty.setFacultyaddress(a);
+				faculty.setMobile(m);
+				faculty.setEmail(e);
+				faculty.setUsername(u);
+				faculty.setPassword(p);
+			}
 			
-				throw new FacultyException(ConsoleColors.RED_BACKGROUND+"Faculty does not exist with this id "+ facultyId + "."+ConsoleColors.RESET);
 			
-		}catch(SQLException e) {
-//			e.printStackTrace();
-			
-			throw new FacultyException(ConsoleColors.RED_BACKGROUND+e.getMessage()+ConsoleColors.RESET);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return faculty;
 	}
 
-
-
+	@Override
+	public List<Faculty> searchFacultyByName() throws FacultyException {
+		
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("Enter FacultyByName");
+		String FacultyByName = sc.next();
+		
+		List<Faculty> fact = new ArrayList<>();
+		try (Connection conn = DBUtil.provideConnection()){
+			
+			PreparedStatement ps = conn.prepareStatement("select * from faculty where FacultyByName = ? ");
+			
+			ps.setString(1, FacultyByName);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()){
+				
+				int id = rs.getInt("facultyId");
+				
+				String Name = rs.getString("FacultyByName");
+				
+				String add = rs.getString("facultyAddress");
+				
+				String mob = rs.getString("mobile");
+				
+				String em = rs.getString("email");
+				
+				String us = rs.getString("username");
+			
+		        String pass = "********";
+				
+           Faculty f=new Faculty(id, Name, add, mob, em, us, pass);
+				
+				fact.add(f);
+				
+				
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return null;
+	}
 
 	@Override
-	public String updateFacultyDetails(String str, String set, int facultyId) throws FacultyException {
+	public String updateFacultyDetails() throws FacultyException {
 		
-		String message = "Data Not Updated..";
+	    String message = ConsoleColors.RED+"Not updated"+ConsoleColors.RESET;
+		String str="";
+        
+		Scanner sc=new Scanner(System.in);
 		
-		try(Connection conn = DBconn.provideConnection()){
+		System.out.println(ConsoleColors.PURPLE+"What do you want to update?"+ConsoleColors.RESET);
+		
+		System.out.println("1. facultyname");
+		System.out.println("2. facultyaddress");
+		System.out.println("3. mobile");
+		System.out.println("4. email");
+		System.out.println("5. username");
+		System.out.println("6. password");
+		
+		int up=sc.nextInt();
+		
+		switch(up){
+		
+		case 1:str= "facultyname";
+		break;
+		
+		case 2:str="facultyaddress";
+		break;
+		
+		case 3:str="moblie";
+		break;
+		
+		case 4:str="email";
+		break;
+		
+		case 5:str="username";
+		break;
+		
+		case 6:str="password";
+		break;
+		
+		
+		}
+ 
+		System.out.println("entry facultyId :-");
+		int id = sc.nextInt();
+		
+		
+		System.out.println("enter new name :-"+str);
+		String set=sc.next();
+		
+		try (Connection conn = DBUtil.provideConnection()){
 			
-			PreparedStatement ps = conn.prepareStatement("update faculty set "+ str +" = ? where facultyId = ?");
+			PreparedStatement ps = conn.prepareStatement("update faculty set "+str+" = ? where facultyid=?");
 			
 			ps.setString(1, set);
-			ps.setInt(2, facultyId);
+			ps.setInt(2, id);
+			
+			int rs =ps.executeUpdate();
+			
+			if(rs > 0) {
+				message = ConsoleColors.GREEN+"faculty update";
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return message;
+	}
+
+	@Override
+	public String deleteFaculty() throws FacultyException {
+		String message=ConsoleColors.RED+" Faculty Not deleted "+ConsoleColors.RESET;
+		Scanner sc=new Scanner(System.in);
+		System.out.println("enter facultyId ");
+		int facultyId =sc.nextInt();
+		
+		
+		try(Connection conn = DBUtil.provideConnection()){
+			
+			
+			PreparedStatement ps = conn .prepareStatement("delete from faculty where facultyId = ?");
+			
+			ps.setInt(1, facultyId);
 			
 			int x = ps.executeUpdate();
 			
 			if(x>0) {		
-				message = ConsoleColors.GREEN+"Faculty Details Updated Successfully.."+ConsoleColors.RESET;	
+				message = ConsoleColors.GREEN+"Faculty Deleted Successfully.."+ConsoleColors.RESET;
+				
+			}else {
+				throw new FacultyException(ConsoleColors.RED+"Faculty Not Exist"+ConsoleColors.RESET);
+				
 			}
 			
-		}catch(SQLException e) {
-			
-			message = ConsoleColors.RED_BACKGROUND+e.getMessage()+ConsoleColors.RESET;
-			
+		} catch (SQLException e) {
+
+			throw new FacultyException(ConsoleColors.RED+"Wrong Data Format"+ConsoleColors.RESET);
 		}
-	
+		
 		return message;
 	}
 
-
-
+	@Override
+	public String updateppssword() throws FacultyException {
+		
+		String msg=ConsoleColors.RED+"Not updated"+ConsoleColors.RESET;
+		String str="";
+	
+		Scanner sc=new Scanner(System.in);
+		
+		str="password";
+		
+		
+		System.out.println("enter facultyid");
+		int id=sc.nextInt();
+		System.out.println("enter new"+str);
+		String set=sc.next();
+		try(Connection conn=DBUtil.provideConnection()){
+			
+			PreparedStatement ps=conn.prepareStatement("update faculty set "+str+" = ? where facultyid=?");
+			
+			ps.setString(1, set);
+			ps.setInt(2, id);
+			
+			int rs=ps.executeUpdate();
+			
+			if (rs>0) {
+				msg=ConsoleColors.GREEN+"faculty update";
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return msg;
+	}
 
 	@Override
-	public List<Faculty> getAllFacultyDetails() throws FacultyException {
-      
-		List<Faculty> faculty = new ArrayList<>();
-		
-		try(Connection conn = DBconn.provideConnection()){
-			
-			PreparedStatement ps = conn .prepareStatement("Select * from faculty");
-
-			
-			ResultSet rs = ps.executeQuery();
-			
-			while(rs.next()) {		
-				
-				
-				int facultyId = rs.getInt("facultyId");
-				String facultyName = rs.getString("facultyName");
-				String facultyAddress = rs.getString("facultyAddress");
-				String mobile = rs.getString("mobile");
-				String email = rs.getString("email");
-				String username = rs.getString("username");
-				String password = rs.getString("password");
-				
-				
-			
-				
-				Faculty Facultys = new Faculty(facultyId, facultyName, facultyAddress, mobile, email, username, password);
-				
-				faculty.add(Facultys);
-				
-			}
-			
-			if(Faculty.size() == 0) {
-				throw new FacultyException(ConsoleColors.RED_BACKGROUND+"No Faculty found.."+ConsoleColors.RESET);
-			}
-			
-				
-		}catch(SQLException e) {
-    		e.printStackTrace();
-			
-			throw new FacultyException(ConsoleColors.RED_BACKGROUND+e.getMessage()+ConsoleColors.RESET);
-		}
-		
-		return faculty;
-			
+	public Boolean FacultyLogin() throws FacultyException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-
-
-	// Delete details of faculty table
-		@Override
-		public String deleteFaculty(int facultyId) throws FacultyException {
-			
-			String message = ConsoleColors.RED+"Faculty Data Not Updated..."+ConsoleColors.RESET;
-			
-			try(Connection conn = DBconn.provideConnection()){
-				
-				
-				PreparedStatement ps = conn .prepareStatement("delete from faculty where facultyId = ?");
-				
-				ps.setInt(1, facultyId);
-				
-				int x = ps.executeUpdate();
-				
-				if(x>0) {		
-					message = ConsoleColors.GREEN+"Faculty Deleted Successfully.."+ConsoleColors.RESET;
-					
-				}else {
-					throw new FacultyException(ConsoleColors.RED+"Faculty Not Exist"+ConsoleColors.RESET);
-					
-				}
-				
-			} catch (SQLException e) {
-
-				throw new FacultyException(ConsoleColors.RED+"Wrong Data Format"+ConsoleColors.RESET);
-			}
-			
-			return message;
-		}
-
-
-
-
-		@Override
-		public Faculty loginFaculty(String username, String password) throws FacultyException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-
-
-
-		
-
-
-	}
+	
+}

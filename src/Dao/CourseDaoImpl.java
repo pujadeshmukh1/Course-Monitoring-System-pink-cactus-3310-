@@ -1,107 +1,70 @@
 package Dao;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
+import com.mysql.cj.protocol.Message;
 
 import Exceptions.CourseException;
-import Exceptions.FacultyException;
-import JavaBean.Course;
-import Utility.DBconn;
-import custom.ConsoleColors;
+import Extra.ConsoleColors;
+import Model_JavaBeen.Course;
+import Utility.DBUtil;
 
 public class CourseDaoImpl implements CourseDao{
 
-	
 	@Override
-	public String addCourse(Course course) throws CourseException {
-   String message = "Data not insert";
+	public String addCourse() throws CourseException {
+
+		Scanner sc=new Scanner(System.in);
+
+		System.out.println("enter course id");
+		int courseId = sc.nextInt();
 		
-		try (Connection conn = DBconn.provideConnection()){
+		System.out.println("enter course name");
+		String courseName=sc.next();
+		System.out.println("enter course fee");
+		int Fee=sc.nextInt();
+		System.out.println("enter course CourseDesc");
+		String courseDescription=sc.next();
+		String message = ConsoleColors.RED+"Data Not Inserted..."+ConsoleColors.RESET;
+		
+		try(Connection conn = DBUtil.provideConnection()){
 			
-			PreparedStatement ps = conn.prepareStatement("insert into course(CourseId, courseName, fee, courseDescription) values(?,?,?,?)");
+			PreparedStatement ps = conn .prepareStatement("insert into course(courseId, courseName, Fee, courseDescription)values(?,?,?,?)");
 			
-			ps.setInt(1, course.getCourseId());
-			ps.setString(2, course.getCourseName());
-			ps.setInt(3, course.getFee());
-			ps.setString(4, course.getCourseDescription());
+			ps.setInt(1, courseId);
+			ps.setString(2,courseName);
+			ps.setInt(3, Fee);
+			ps.setString(4, courseDescription);
 			
-			int rs = ps.executeUpdate();
+			int x = ps.executeUpdate();
 			
-			if( rs > 0) {
-				
+			if(x>0) {		
 				message = ConsoleColors.GREEN+"New Course Added Successfully.."+ConsoleColors.RESET;	
 			}else {
 				throw new CourseException(ConsoleColors.RED_BACKGROUND+"Duplicate Entry"+ConsoleColors.RESET);
 			}
 			
-				
-			}
+		}catch(SQLException e) {
+//			e.printStackTrace();
 			
+			throw new CourseException(ConsoleColors.RED_BACKGROUND+e.getMessage()+ConsoleColors.RESET);
 			
-			
-		 catch (Exception e) {
-			// TODO: handle exception
-			 throw new CourseException(ConsoleColors.RED_BACKGROUND+e.getMessage()+ConsoleColors.RESET);
 		}
-	
 		
 		return message;
-		
-	
-}
-
-	@Override
-	public List<Course> searchBYCourseName(String name) throws CourseException {
-		 List<Course> course=new ArrayList<>();
-		
-		try (Connection conn = DBconn.provideConnection()){
-			
-			PreparedStatement ps = conn.prepareStatement("Select * from Course where courseName = ?");
-			
-			ps.setString(1, name);
-			
-			ResultSet rs = ps.executeQuery();
-			
-			if(rs.next()) {
-				 int  coursed_id = rs.getInt("courseId");	
-				 String  courseName = rs.getString("courseName");	
-				 int  fee = rs.getInt("fee");	
-				 String  courseDescription = rs.getString("courseDescription");	
-				 
-				 Course cour = new Course(coursed_id, courseName, fee, courseDescription);
-				
-				 course.add(cour);
-				
-			}
-			if(course.size()==0) {
-				throw new FacultyException("course does not exist by name");
-			}
-			
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CourseException(e.getMessage());
-		}
-		
-		return course;
-		
-		
 	}
 
 	@Override
 	public List<Course> getAllCourse() throws CourseException {
+List<Course> courses = new ArrayList<>();
 		
-		
-     List<Course> courses = new ArrayList<>();
-		
-		try(Connection conn = DBconn.provideConnection()){
+		try(Connection conn =DBUtil.provideConnection()){
 			
 			PreparedStatement ps = conn .prepareStatement("Select * from Course");
 
@@ -110,12 +73,12 @@ public class CourseDaoImpl implements CourseDao{
 			
 			while(rs.next()) {		
 				
-				int coursed_id = rs.getInt("courseId");
-				String courseName = rs.getString("courseName");
-				int fee = rs.getInt("fee");
-				String courseDescription = rs.getString("courseDescription");
+				int cid = rs.getInt("courseId");
+				String cname = rs.getString("courseName");
+				int cfee = rs.getInt("Fee");
+				String cdesc = rs.getString("courseDescription");
 				
-				Course course = new Course(coursed_id, courseName, fee, courseDescription);
+				Course course = new Course(cid, cname, cfee, cdesc);
 				
 				courses.add(course);
 				
@@ -133,75 +96,113 @@ public class CourseDaoImpl implements CourseDao{
 		}
 		
 		return courses;
-		
-
 	}
 
-	
-	
-	
 	@Override
-	public String updateCourseDetails(String str, String set, String name) throws CourseException {
-
-		String message = ConsoleColors.RED+"Course Data Not Updated..."+ConsoleColors.RESET;
+	public Course searchCourseName() throws CourseException {
+		Course c=null;
 		
-		try(Connection conn = DBconn.provideConnection()){
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter CourseName :-");
+		String CourseName= sc.next();
+		
+		try (Connection conn = DBUtil.provideConnection()){
 			
-			PreparedStatement ps = conn.prepareStatement("update course set "+ str +" = ? where courseName = ?");
+			PreparedStatement ps = conn.prepareStatement("select * from course where courseName=?");
 			
-			ps.setString(1, set);
+			ps.setString(1, CourseName);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				int id = rs.getInt("courseid");
+				String  n = rs.getString("courseName");
+				int f = rs.getInt("fee");
+				String cd = rs.getString("courseDescription");
+				
+				Course course = new Course(id,n,f,cd);
+				
+				
+				
+				
+			}else {
+				throw new CourseException(ConsoleColors.RED_BACKGROUND+"Course does not exist."+ConsoleColors.RESET);
+			}
+			
+		} catch (Exception e) {
+		e.getMessage();
+		}
+		
+		return c;
+	}
+
+	@Override
+	public String updateCourseDetails() throws CourseException {
+		
+		String message = "Data not update";
+		
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("give Course Name");
+		String name = sc.next();
+		
+		System.out.println("give new fee");
+		int fee = sc.nextInt();
+		
+		try (Connection conn = DBUtil.provideConnection()){
+			
+			PreparedStatement ps = conn.prepareStatement("update Course set fee =? where courseName=?");
+			
+			ps.setInt(1, fee);
 			ps.setString(2, name);
 			
-			int x = ps.executeUpdate();
+			int rs = ps.executeUpdate();
 			
-			if(x>0) {		
+			if( rs >0) {
 				message = ConsoleColors.GREEN+"course Details Updated Successfully.."+ConsoleColors.RESET;	
 			}else {
 				throw new CourseException(ConsoleColors.RED+"Course Not Exist"+ConsoleColors.RESET);
 			}
 			
-		} catch (SQLException e) {	
-			throw new CourseException(ConsoleColors.RED_BACKGROUND+e.getMessage()+ConsoleColors.RESET);
-			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
+		
 		
 		return message;
 	}
 
-	
-	
-	
-	
 	@Override
-	public String deleteBatch(String courseName) throws CourseException {
-    String message = ConsoleColors.RED+"Batch Data Not Updated..."+ConsoleColors.RESET;
+	public String deleteCourse() throws CourseException {
 		
-		try(Connection conn = DBconn.provideConnection()){
+		String message = "Course not update";
+		
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("give CourseName:- ");
+		String CourseName = sc.next();
+		
+		try (Connection conn = DBUtil.provideConnection()){
 			
-			PreparedStatement ps = conn.prepareStatement("delete from courses where courseName = ?");
+			PreparedStatement ps = conn.prepareStatement("delete from Course where courseName=?");
 			
-			ps.setString(1, courseName);
+			ps.setString(1, CourseName);
 			
-			int x = ps.executeUpdate();
+			int rs = ps.executeUpdate();
+		if(rs >0 ) {	
+			message = ConsoleColors.GREEN+"Course Deleted Successfully.."+ConsoleColors.RESET;	
+		}else {
+			throw new CourseException(ConsoleColors.RED+"Course Not Exist"+ConsoleColors.RESET);
 			
-			if(x>0) {		
-				
-				message = ConsoleColors.GREEN+"Course Deleted Successfully.."+ConsoleColors.RESET;
-				
-			}else {
-				
-				throw new CourseException(ConsoleColors.RED+"Course Not Exist"+ConsoleColors.RESET);
-				
-			}
-		}catch (SQLException e) {
+		}
 			
-			throw new CourseException(ConsoleColors.RED+"Wrong Data Format"+ConsoleColors.RESET);
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		
-		return message;
-		
+		return null;
 	}
 
-	}
 	
-
+}

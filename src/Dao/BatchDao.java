@@ -1,31 +1,25 @@
 package Dao;
 
-
-
-
 import java.util.List;
 
 import Exceptions.BatchException;
-import JavaBean.Batch;
-
+import Model_JavaBeen.Batch;
+import Model_JavaBeen.Report;
 
 public interface BatchDao {
-	
-	public String addBatch(Batch batch) throws BatchException;
+    public String addBatch() throws BatchException;
 	
 	public List<Batch> allBatch() throws BatchException;
 	
-	public List<Batch> searchBatchByName(String name) throws BatchException;
+	public Batch searchBatchById() throws BatchException;
 
-	public Batch SearchBatchById(int batchId) throws BatchException;
+//	public String updateBatch () throws BatchException;
+//	
+	public String deleteBatch() throws BatchException;
 	
-	//public List<Batch> allBatch() throws BatchException;
+	public String allocateFaculty() throws BatchException;
+//	
+   public List<Report> generateReport() throws BatchException;
+
 	
-	//public String updateBatch (String str, String set, String batchId) throws BatchException;
-	
-	//public String deleteBatch(String batchId) throws BatchException;
-	
-	//public String allocateFaculty(int fName, String batchId) throws BatchException;
-	
-	//public List<Report> generateReport() throws BatchException;
 }

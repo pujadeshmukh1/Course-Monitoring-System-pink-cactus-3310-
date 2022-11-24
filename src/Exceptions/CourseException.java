@@ -1,13 +1,11 @@
 package Exceptions;
 
 public class CourseException extends Exception{
-	
-   public CourseException() {
+	public CourseException() {
 		
 	}
-   
-	public CourseException(String message) {
-	   super(message);	
+	public CourseException(String msg) {
+	super(msg);
 	}
-	
 }
+
