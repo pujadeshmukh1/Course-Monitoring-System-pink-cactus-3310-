@@ -15,7 +15,6 @@
 
 <br/>
 
-<img align="right" alt="Coding" width="400" src="https://user-images.githubusercontent.com/76105799/193437482-ca30d43e-4da0-43d2-8123-97941007b6e1.png">
 
 ## Description
 
