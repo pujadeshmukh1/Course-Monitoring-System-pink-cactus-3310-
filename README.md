@@ -24,6 +24,8 @@ Educational  Institute there are several courses running parallel  every day. Fo
 | Spring Boot | Build Java based Spring Application |
 | MySQL |Relational Database System |
 
+  ## 🛠 Tech Stack
+![My Skills](https://skillicons.dev/icons?i=java,mysql,powershell,git,github)
 
 ## Preview
 
@@ -39,6 +41,5 @@ Educational  Institute there are several courses running parallel  every day. Fo
 
 
 
-## 🛠 Tech Stack
-![My Skills](https://skillicons.dev/icons?i=java,mysql,powershell,git,github)
+
 
