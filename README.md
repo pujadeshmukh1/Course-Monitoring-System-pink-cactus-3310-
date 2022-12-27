@@ -51,6 +51,9 @@ Educational  Institute there are several courses running parallel  every day. Fo
 ![Admin Login](https://user-images.githubusercontent.com/76105799/193438208-c53e6eaa-25d2-4e64-8aa0-cf1ced5ce656.png)
 <br/><br/>
 ![Database](https://user-images.githubusercontent.com/76105799/193437820-57921009-d8ce-48b5-a9e3-2511413870ab.png)
+  
+ <img src="flow chart.png"/>
+
 
 
 
