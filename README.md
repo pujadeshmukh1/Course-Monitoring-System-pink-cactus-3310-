@@ -40,6 +40,17 @@ Educational  Institute there are several courses running parallel  every day. Fo
 6. Faculty can fill up the status for the batches(complete/incomplete).
 
 
+## Learning
+
+- Gain excessive knowledge to make an application usining Java, JDBC, MySQL.
+- Got to know selft-learning and research of the various tools and technologies.
+- Enjoyed the process of learning and creating the product.
+
+## Screenshots
+
+![Admin Login](https://user-images.githubusercontent.com/76105799/193438208-c53e6eaa-25d2-4e64-8aa0-cf1ced5ce656.png)
+<br/><br/>
+![Database](https://user-images.githubusercontent.com/76105799/193437820-57921009-d8ce-48b5-a9e3-2511413870ab.png)
 
 
 
