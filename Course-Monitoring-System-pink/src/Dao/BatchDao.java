@@ -14,11 +14,11 @@ public interface BatchDao {
 	public Batch searchBatchById() throws BatchException;
 
 //	public String updateBatch () throws BatchException;
-//	
+	
 	public String deleteBatch() throws BatchException;
 	
 	public String allocateFaculty() throws BatchException;
-//	
+	
    public List<Report> generateReport() throws BatchException;
 
 	
