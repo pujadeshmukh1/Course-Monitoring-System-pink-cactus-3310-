@@ -66,13 +66,13 @@ String message = ConsoleColors.RED+"Data Not Inserted..."+ConsoleColors.RESET;
 			}
 			
 			count++;
-//			String text = String.format("%03d", count);
+
 			
 			int batchId = count;
 			
 			PreparedStatement ps2 = conn .prepareStatement("insert into Batch( courseId, numberOfStudents, batchstartDate, duration) values(?,?,?,?)");
 			
-//			ps2.setInt(1, batchId);
+
 			ps2.setInt(1,CourseId);
 			ps2.setInt(2,noofstudent);
 			ps2.setString(3, batchstartDate);
@@ -98,7 +98,7 @@ String message = ConsoleColors.RED+"Data Not Inserted..."+ConsoleColors.RESET;
 	}
 
 	public Batch searchBatchById() throws BatchException {
-		// TODO Auto-generated method stub
+	
 		Batch batch = null;
 		
 		Scanner sc=new Scanner(System.in);
@@ -108,7 +108,7 @@ String message = ConsoleColors.RED+"Data Not Inserted..."+ConsoleColors.RESET;
 			
 			
 			PreparedStatement ps = conn .prepareStatement("Select b.batchId, b.courseId, b.facultyId, f.facultyname, b.numberOfStudents, b.batchstartDate, b.duration from Batch b, Faculty f where  b.batchId = ?");
-//			b.facultyID = f.facultyID and
+
 			ps.setInt(1, id);
 			
 			ResultSet rs = ps.executeQuery();
@@ -148,9 +148,7 @@ String message = ConsoleColors.RED+"Data Not Inserted..."+ConsoleColors.RESET;
 			
 			
 			PreparedStatement ps = conn .prepareStatement("select * from batch");
-//			"Select b.batchId, b.courseId, b.facultyId, f.facultyFname, b.noOfStudents, b.batchstartDate, b.duration from Batch b, Faculty f where b.courseId = ("
-//			+ "Select courseId from course where courseName = ?) and b.facultyID = f.facultyID"
-//			ps.setString(1, name);
+
 			
 			ResultSet rs = ps.executeQuery();
 			
@@ -184,7 +182,7 @@ String message = ConsoleColors.RED+"Data Not Inserted..."+ConsoleColors.RESET;
 
 	@Override
 	public String deleteBatch() throws BatchException {
-		// TODO Auto-generated method stub
+		
 				Scanner sc=new Scanner(System.in);
 				System.out.println("enter batchid");
 				int Id=sc.nextInt();
@@ -216,7 +214,7 @@ String message = ConsoleColors.RED+"Data Not Inserted..."+ConsoleColors.RESET;
 	
 	@Override
 	public String allocateFaculty() throws BatchException {
-		// TODO Auto-generated method stub
+		
 		Scanner sc=new Scanner(System.in);
 		System.out.println("give faculty id");
 		int fid=sc.nextInt();
