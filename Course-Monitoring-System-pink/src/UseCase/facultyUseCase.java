@@ -32,7 +32,7 @@ public class facultyUseCase {
 		case "1": {
 			CoursePlanDao c=new CoursePlanDaoImpl();
 			try {	List<CoursePlan>c1p=c.viewAllCoursePlanDateWise();
-//				System.out.println(cp);
+
 				for (CoursePlan coursePlan : c1p) {
 					System.out.println(coursePlan);
 				}
@@ -78,8 +78,7 @@ public class facultyUseCase {
 			try {
 				System.out.println(c.updateStatus());
 			} catch (CoursePlanException e) {
-				// TODO Auto-generated catch block
-//				e.printStackTrace();
+
 				System.out.println();
 				System.out.println(ConsoleColors.RED_BACKGROUND+e.getMessage()+ConsoleColors.RESET);
 				System.out.println();
@@ -96,7 +95,7 @@ public class facultyUseCase {
 		
 		default:
 			System.out.println("Unexpected value: " +ip);
-//			("Unexpected value: " +ip);
+
 			
 		}
 		
