@@ -13,6 +13,8 @@ public interface CourseDao {
 		
 	 public Course searchCourseName() throws CourseException;
 	
+	
+	
 	 public String updateCourseDetails() throws CourseException;
 
 	 public String deleteCourse() throws CourseException;
